@@ -25,6 +25,6 @@ export const errorHandler = (
   }
   console.error('Unhandled error:', err);
   return res.status(500).json({
-    error: { code: 'INTERNAL_ERROR', message: 'Something went wrong' },
+    error: { code: 'INTERNAL_ERROR', message: 'Une erreur interne est survenue' },
   });
 };

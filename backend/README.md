@@ -22,16 +22,39 @@ npm install
 
 # 2. Copier la config
 cp .env.example .env
-# Éditer DATABASE_URL et JWT_SECRET
+# Éditer JWT_SECRET (≥ 16 caractères) si besoin
 
-# 3. Lancer Postgres (via Docker ou local)
+# 3. Lancer Postgres via Docker (depuis backend/)
+docker compose up -d
 
-# 4. Appliquer les migrations + générer le client Prisma
+# 4. Première migration + génération du client Prisma
 npm run prisma:migrate
+# (donner un nom à la migration, ex: "init")
 
 # 5. Lancer en dev (hot reload)
 npm run dev
 ```
+
+## Tester l'auth (J1)
+
+Une fois le serveur lancé :
+
+```bash
+# Healthcheck
+curl http://localhost:3000/api/health
+
+# Inscription
+curl -X POST http://localhost:3000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"password123","firstName":"Test","lastName":"User"}'
+
+# Connexion
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"password123"}'
+```
+
+Les deux endpoints renvoient `{ "data": { "user": {...}, "token": "..." } }`.
 
 L'API est disponible sur `http://localhost:3000/api`.
 Healthcheck : `GET /api/health`.
