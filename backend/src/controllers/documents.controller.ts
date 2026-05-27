@@ -20,6 +20,24 @@ export const createDocument = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
+export const getDocument = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const doc = await documentsService.getOne(req.user!.sub, req.params.id as string);
+    res.json({ data: doc });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateDocument = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const doc = await documentsService.update(req.user!.sub, req.params.id as string, req.body);
+    res.json({ data: doc });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const deleteDocument = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     await documentsService.remove(req.user!.sub, req.params.id as string);
