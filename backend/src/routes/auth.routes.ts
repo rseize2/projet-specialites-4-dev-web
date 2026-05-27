@@ -8,17 +8,10 @@ const router = Router();
 
 router.post('/register', validate(registerSchema), authController.register);
 router.post('/login', validate(loginSchema), authController.login);
+router.post('/logout', requireAuth, authController.logout);
 
-router.post('/logout', requireAuth, (_req, res) => {
-  res.status(501).json({ error: { code: 'NOT_IMPLEMENTED' } });
-});
-
-router.post('/2fa/enable', requireAuth, (_req, res) => {
-  res.status(501).json({ error: { code: 'NOT_IMPLEMENTED' } });
-});
-
-router.post('/2fa/verify', requireAuth, validate(verify2FASchema), (_req, res) => {
-  res.status(501).json({ error: { code: 'NOT_IMPLEMENTED' } });
-});
+router.post('/2fa/enable', requireAuth, authController.enable2FA);
+router.post('/2fa/verify', requireAuth, validate(verify2FASchema), authController.verify2FA);
+router.post('/2fa/disable', requireAuth, validate(verify2FASchema), authController.disable2FA);
 
 export default router;
