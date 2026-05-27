@@ -17,11 +17,41 @@ model User {
   email            String   @unique
   password         String
   firstName        String
-  lastName        String
+  lastName         String
   role             Role     @default(USER)
   blocked          Boolean  @default(false)
   twoFactorSecret  String?
   twoFactorEnabled Boolean  @default(false)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+
+  ownedDocuments   Document[]       @relation("DocumentOwner")
+  updatedDocuments Document[]       @relation("DocumentUpdatedBy")
+  documentInvites  DocumentInvite[]
+}
+
+model Document {
+  id        String   @id @default(uuid())
+  title     String
+  content   String   @default("")
+  ownerId   String
+  updatedBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner         User             @relation("DocumentOwner", fields: [ownerId], references: [id])
+  updatedByUser User?            @relation("DocumentUpdatedBy", fields: [updatedBy], references: [id])
+  invites       DocumentInvite[]
+}
+
+model DocumentInvite {
+  id         String   @id @default(uuid())
+  documentId String
+  userId     String
+  createdAt  DateTime @default(now())
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@unique([documentId, userId])
 }
