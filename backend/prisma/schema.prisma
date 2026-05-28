@@ -28,6 +28,7 @@ model User {
   ownedDocuments   Document[]       @relation("DocumentOwner")
   updatedDocuments Document[]       @relation("DocumentUpdatedBy")
   documentInvites  DocumentInvite[]
+  uploadedFiles    DocumentFile[]
 }
 
 model Document {
@@ -42,6 +43,21 @@ model Document {
   owner         User             @relation("DocumentOwner", fields: [ownerId], references: [id])
   updatedByUser User?            @relation("DocumentUpdatedBy", fields: [updatedBy], references: [id])
   invites       DocumentInvite[]
+  files         DocumentFile[]
+}
+
+model DocumentFile {
+  id         String   @id @default(uuid())
+  documentId String
+  filename   String
+  mimeType   String
+  size       Int
+  storageKey String   // chemin dans le bucket MinIO
+  uploadedBy String
+  createdAt  DateTime @default(now())
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  uploader User     @relation(fields: [uploadedBy], references: [id])
 }
 
 model DocumentInvite {

@@ -5,11 +5,13 @@ import { env } from './config/env';
 import routes from './routes';
 import { errorHandler } from './middlewares/error';
 import { initSocket } from './lib/socket';
+import { ensureBucket } from './lib/minio';
 
 const app = express();
 const server = http.createServer(app);
 
 initSocket(server);
+ensureBucket().catch(err => console.error('MinIO bucket init failed:', err));
 
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
