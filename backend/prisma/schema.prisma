@@ -29,6 +29,7 @@ model User {
   updatedDocuments Document[]       @relation("DocumentUpdatedBy")
   documentInvites  DocumentInvite[]
   uploadedFiles    DocumentFile[]
+  messages         Message[]
 }
 
 model Document {
@@ -44,6 +45,7 @@ model Document {
   updatedByUser User?            @relation("DocumentUpdatedBy", fields: [updatedBy], references: [id])
   invites       DocumentInvite[]
   files         DocumentFile[]
+  messages      Message[]
 }
 
 model DocumentFile {
@@ -58,6 +60,19 @@ model DocumentFile {
 
   document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
   uploader User     @relation(fields: [uploadedBy], references: [id])
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  documentId String
+  userId     String
+  content    String
+  createdAt  DateTime @default(now())
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@index([documentId, createdAt])
 }
 
 model DocumentInvite {

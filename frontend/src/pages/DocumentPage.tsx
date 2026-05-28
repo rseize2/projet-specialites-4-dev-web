@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
@@ -8,7 +8,7 @@ import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
 import {
-    ArrowLeft, Phone, PhoneOff, Loader2, Check, UserPlus, Save
+    ArrowLeft, Phone, PhoneOff, Loader2, Check, UserPlus, Save, MessageSquare
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { getDocument, updateDocument, inviteCollaborator } from '@/api/documents'
@@ -21,6 +21,9 @@ import {
     Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription
 } from '@/components/ui/dialog'
 import EditorToolbar from '@/components/editor/EditorToolbar'
+import CallPanel from '@/components/CallPanel'
+import ChatPanel from '@/components/ChatPanel'
+import { useCall } from '@/hooks/useCall'
 
 const AUTOSAVE_DELAY = 2000
 
@@ -29,14 +32,16 @@ type SaveStatus = 'saved' | 'saving' | 'unsaved'
 export default function DocumentPage() {
     const { id } = useParams<{ id: string }>()
     const navigate = useNavigate()
+    const [searchParams, setSearchParams] = useSearchParams()
 
     const [doc, setDoc] = useState<DocumentDetail | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [saveStatus, setSaveStatus] = useState<SaveStatus>('saved')
     const [title, setTitle] = useState('')
 
-    const [inCall, setInCall] = useState(false)
     const [showCallPrompt, setShowCallPrompt] = useState(false)
+    const [showChat, setShowChat] = useState(false)
+    const call = useCall(id)
 
     const [showInvite, setShowInvite] = useState(false)
     const [inviteEmail, setInviteEmail] = useState('')
@@ -68,19 +73,56 @@ export default function DocumentPage() {
         }
     }, [id])
 
+    // Auto-join l'appel si on arrive avec ?call=join (clic sur le toast global)
+    useEffect(() => {
+        if (searchParams.get('call') !== 'join') return
+        if (call.inCall || !id) return
+        ;(async () => {
+            try {
+                await call.join()
+            } catch (err) {
+                toast.error(err instanceof Error ? err.message : "Impossible de rejoindre l'appel")
+            } finally {
+                // nettoyer l'URL
+                searchParams.delete('call')
+                setSearchParams(searchParams, { replace: true })
+            }
+        })()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id, searchParams])
+
+    const contentLoadedRef = useRef(false)
+
     async function loadDocument(docId: string) {
         try {
             const data = await getDocument(docId)
             setDoc(data)
             setTitle(data.title)
-            editor?.commands.setContent(data.content || '')
             setSaveStatus('saved')
-        } catch {
+            // Le contenu sera injecté dans l'éditeur par l'useEffect ci-dessous,
+            // une fois l'éditeur prêt ET le doc chargé.
+        } catch (err) {
+            console.error('[DocumentPage] loadDocument failed:', err)
+            toast.error('Impossible de charger ce document')
             navigate('/dashboard')
         } finally {
             setIsLoading(false)
         }
     }
+
+    // Sync content → editor une fois les deux prêts (TipTap commandManager peut
+    // ne pas être prêt au moment où loadDocument termine).
+    useEffect(() => {
+        if (!editor || !doc || contentLoadedRef.current) return
+        try {
+            editor.commands.setContent(doc.content || '')
+            contentLoadedRef.current = true
+            setSaveStatus('saved')
+        } catch (e) {
+            // commandManager pas encore prêt — on retentera au prochain render
+            console.warn('[DocumentPage] editor not ready yet, retrying...', e)
+        }
+    }, [editor, doc])
 
     const scheduleAutoSave = useCallback(
         (content: string) => {
@@ -189,17 +231,24 @@ export default function DocumentPage() {
                     </Button>
 
                     <Button
-                        variant={inCall ? 'destructive' : 'outline'}
+                        variant="outline"
                         size="sm"
+                        onClick={() => setShowChat((s) => !s)}
+                    >
+                        <MessageSquare className="mr-1.5 h-3.5 w-3.5" />
+                        Chat
+                    </Button>
+
+                    <Button
+                        variant={call.inCall ? 'destructive' : 'outline'}
+                        size="sm"
+                        className={call.incomingCall && !call.inCall ? 'animate-pulse ring-2 ring-primary' : ''}
                         onClick={() => {
-                            if (inCall) {
-                                setInCall(false)
-                            } else {
-                                setShowCallPrompt(true)
-                            }
+                            if (call.inCall) call.leave()
+                            else setShowCallPrompt(true)
                         }}
                     >
-                        {inCall ? (
+                        {call.inCall ? (
                             <>
                                 <PhoneOff className="mr-1.5 h-3.5 w-3.5" />
                                 Raccrocher
@@ -212,11 +261,26 @@ export default function DocumentPage() {
                         )}
                     </Button>
 
-                    {inCall && (
-                        <Badge variant="default" className="text-xs">Appel en cours</Badge>
+                    {call.inCall && (
+                        <Badge variant="default" className="text-xs">
+                            {call.participants.length + 1} en appel
+                        </Badge>
                     )}
                 </div>
             </div>
+
+            {call.inCall && (
+                <CallPanel
+                    localStream={call.localStream}
+                    remoteStreams={call.remoteStreams}
+                    participants={call.participants}
+                    micEnabled={call.micEnabled}
+                    cameraEnabled={call.cameraEnabled}
+                    hasVideo={call.hasVideo}
+                    onToggleMic={call.toggleMic}
+                    onToggleCamera={call.toggleCamera}
+                />
+            )}
 
             <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
                 <EditorToolbar editor={editor} />
@@ -283,13 +347,32 @@ export default function DocumentPage() {
                         <Button variant="outline" onClick={() => setShowCallPrompt(false)}>
                             Annuler
                         </Button>
-                        <Button onClick={() => { setInCall(true); setShowCallPrompt(false) }}>
+                        <Button
+                            onClick={async () => {
+                                setShowCallPrompt(false)
+                                try {
+                                    await call.join()
+                                } catch (err) {
+                                    toast.error(
+                                        err instanceof Error ? err.message : "Impossible de démarrer l'appel"
+                                    )
+                                }
+                            }}
+                        >
                             <Phone className="mr-2 h-4 w-4" />
                             Démarrer l'appel
                         </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {id && (
+                <ChatPanel
+                    documentId={id}
+                    open={showChat}
+                    onClose={() => setShowChat(false)}
+                />
+            )}
         </div>
     )
 }

@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import Sidebar from './Sidebar'
 import { Button } from './ui/button'
+import GlobalCallNotifications from './GlobalCallNotifications'
 
 export default function Layout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -37,6 +38,8 @@ export default function Layout() {
                     </div>
                 </main>
             </div>
+
+            <GlobalCallNotifications />
         </div>
     )
 }

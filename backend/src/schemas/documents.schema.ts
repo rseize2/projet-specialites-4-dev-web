@@ -10,5 +10,10 @@ export const updateDocumentSchema = z.object({
   content: z.string().optional(),
 });
 
+export const inviteSchema = z.object({
+  email: z.string().email(),
+});
+
 export type CreateDocumentInput = z.infer<typeof createDocumentSchema>;
 export type UpdateDocumentInput = z.infer<typeof updateDocumentSchema>;
+export type InviteInput = z.infer<typeof inviteSchema>;

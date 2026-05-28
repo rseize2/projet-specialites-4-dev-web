@@ -28,8 +28,16 @@ services:
       JWT_SECRET: dev-secret-change-me-in-production-please
       JWT_EXPIRES_IN: 7d
       CORS_ORIGIN: http://localhost
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET: documents
+      MINIO_USE_SSL: "false"
     depends_on:
       postgres:
+        condition: service_healthy
+      minio:
         condition: service_healthy
 
   frontend:

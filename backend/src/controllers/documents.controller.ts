@@ -38,6 +38,15 @@ export const updateDocument = async (req: AuthRequest, res: Response, next: Next
   }
 };
 
+export const inviteCollaborator = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const data = await documentsService.invite(req.user!.sub, req.params.id as string, req.body);
+    res.status(201).json({ data });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const deleteDocument = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     await documentsService.remove(req.user!.sub, req.params.id as string);
