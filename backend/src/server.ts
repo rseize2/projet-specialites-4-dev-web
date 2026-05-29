@@ -11,6 +11,8 @@ import { collabServer } from './collab';
 const app = express();
 const server = http.createServer(app);
 
+app.set('trust proxy', 1);
+
 initSocket(server);
 ensureBucket().catch(err => console.error('MinIO bucket init failed:', err));
 collabServer.listen();

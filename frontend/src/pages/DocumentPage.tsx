@@ -7,6 +7,7 @@ import TextAlign from '@tiptap/extension-text-align'
 import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import Placeholder from '@tiptap/extension-placeholder'
+import Collaboration from '@tiptap/extension-collaboration'
 import {
     ArrowLeft, Phone, PhoneOff, Loader2, Check, UserPlus, Save, MessageSquare,
     FileDown, Paperclip, Upload, Trash2, FileText
@@ -25,7 +26,8 @@ import EditorToolbar from '@/components/editor/EditorToolbar'
 import CallPanel from '@/components/CallPanel'
 import ChatPanel from '@/components/ChatPanel'
 import { useCall } from '@/hooks/useCall'
-import { useDocumentSync } from '@/hooks/useDocumentSync'
+import { useCollab } from '@/hooks/useCollab'
+import { useAuth } from '@/contexts/AuthContext'
 
 const AUTOSAVE_DELAY = 2000
 
@@ -58,11 +60,14 @@ export default function DocumentPage() {
 
     const fileInputRef  = useRef<HTMLInputElement>(null)
     const saveTimer     = useRef<ReturnType<typeof setTimeout> | null>(null)
-    const emitUpdateRef = useRef<(content: string) => void>(() => {})
+
+    const { user } = useAuth()
+    const { ydoc, connectedUsers, isSynced } = useCollab(id, user)
 
     const editor = useEditor({
         extensions: [
             StarterKit,
+            Collaboration.configure({ document: ydoc }),
             Underline,
             TextAlign.configure({ types: ['heading', 'paragraph'] }),
             Link.configure({ openOnClick: false }),
@@ -73,15 +78,8 @@ export default function DocumentPage() {
         onUpdate: ({ editor: e }) => {
             setSaveStatus('unsaved')
             scheduleAutoSave(e.getHTML())
-            emitUpdateRef.current(e.getHTML())
         },
     })
-
-    const { connectedUsers, emitUpdate } = useDocumentSync(id, editor)
-
-    useEffect(() => {
-        emitUpdateRef.current = emitUpdate
-    }, [emitUpdate])
 
     useEffect(() => {
         if (id) loadDocument(id)
@@ -127,19 +125,17 @@ export default function DocumentPage() {
         }
     }
 
-    // Sync content → editor une fois les deux prêts (TipTap commandManager peut
-    // ne pas être prêt au moment où loadDocument termine).
+    // Migration HTML → Yjs : si le doc Yjs est vide après la synchro (pas de yjsState en base),
+    // on initialise depuis le contenu HTML existant en base.
     useEffect(() => {
-        if (!editor || !doc || contentLoadedRef.current) return
-        try {
-            editor.commands.setContent(doc.content || '')
-            contentLoadedRef.current = true
-            setSaveStatus('saved')
-        } catch (e) {
-            // commandManager pas encore prêt - on retentera au prochain render
-            console.warn('[DocumentPage] editor not ready yet, retrying...', e)
+        if (!editor || !doc || !isSynced || contentLoadedRef.current) return
+        const html = editor.getHTML()
+        if ((html === '<p></p>' || html === '') && doc.content) {
+            editor.commands.setContent(doc.content)
         }
-    }, [editor, doc])
+        contentLoadedRef.current = true
+        setSaveStatus('saved')
+    }, [editor, doc, isSynced])
 
     const scheduleAutoSave = useCallback(
         (content: string) => {
@@ -258,6 +254,12 @@ export default function DocumentPage() {
         return `${(bytes / (1024 * 1024)).toFixed(1)} Mo`
     }
 
+    function userColor(userId: string) {
+        const palette = ['#3b82f6', '#10b981', '#8b5cf6', '#f97316', '#ec4899', '#14b8a6', '#f43f5e', '#f59e0b']
+        const hash = userId.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
+        return palette[hash % palette.length]
+    }
+
     if (isLoading) {
         return (
             <div className="flex h-64 items-center justify-center">
@@ -303,16 +305,26 @@ export default function DocumentPage() {
                 </div>
 
                 {connectedUsers.length > 0 && (
-                    <div className="flex items-center gap-1" title={`${connectedUsers.length} autre(s) utilisateur(s) en ligne`}>
-                        {connectedUsers.slice(0, 3).map((uid, i) => (
+                    <div className="flex items-center">
+                        {connectedUsers.slice(0, 4).map((u, i) => (
                             <div
-                                key={uid}
-                                className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-primary text-[10px] font-semibold ring-2 ring-background"
-                                style={{ marginLeft: i > 0 ? '-6px' : 0 }}
+                                key={u.userId}
+                                className="flex h-7 w-7 items-center justify-center rounded-full text-white text-xs font-semibold ring-2 ring-background"
+                                style={{ backgroundColor: userColor(u.userId), marginLeft: i > 0 ? '-8px' : 0, zIndex: connectedUsers.length - i }}
+                                title={`${u.firstName} ${u.lastName}`.trim() || u.userId}
                             >
-                                {i < 2 ? '●' : `+${connectedUsers.length - 2}`}
+                                {u.firstName?.[0]?.toUpperCase() ?? '?'}
                             </div>
                         ))}
+                        {connectedUsers.length > 4 && (
+                            <div
+                                className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-muted-foreground text-xs font-semibold ring-2 ring-background"
+                                style={{ marginLeft: '-8px', zIndex: 0 }}
+                                title={`${connectedUsers.length - 4} autres utilisateurs`}
+                            >
+                                +{connectedUsers.length - 4}
+                            </div>
+                        )}
                     </div>
                 )}
 
