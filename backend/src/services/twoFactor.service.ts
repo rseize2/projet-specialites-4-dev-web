@@ -20,11 +20,7 @@ const signToken = (user: { id: string; role: 'USER' | 'ADMIN' }, twoFactorVerifi
   });
 };
 
-/**
- * Génère un secret TOTP et un QR code à scanner.
- * Le secret est stocké en BDD mais twoFactorEnabled reste à false
- * tant que l'utilisateur n'a pas confirmé via /verify.
- */
+
 export const enable = async (userId: string) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new HttpError(404, 'USER_NOT_FOUND', 'Utilisateur introuvable');
@@ -44,11 +40,6 @@ export const enable = async (userId: string) => {
   return { secret, qrCode: qrCodeDataUrl, otpauth };
 };
 
-/**
- * Vérifie le code TOTP.
- * - Si twoFactorEnabled était à false (premier scan) → on active la 2FA.
- * - Émet un nouveau JWT avec twoFactorVerified=true.
- */
 export const verify = async (userId: string, code: string) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new HttpError(404, 'USER_NOT_FOUND', 'Utilisateur introuvable');
@@ -72,9 +63,7 @@ export const verify = async (userId: string, code: string) => {
   };
 };
 
-/**
- * Désactive la 2FA après confirmation par un code valide.
- */
+
 export const disable = async (userId: string, code: string) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) throw new HttpError(404, 'USER_NOT_FOUND', 'Utilisateur introuvable');

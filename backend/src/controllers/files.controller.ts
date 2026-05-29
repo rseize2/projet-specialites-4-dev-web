@@ -26,7 +26,6 @@ export const listFiles = async (req: AuthRequest, res: Response, next: NextFunct
 export const downloadFile = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const url = await filesService.getDownloadUrl(req.user!.sub, req.params.id as string, req.params.fileId as string);
-    // redirige directement vers la presigned URL MinIO
     res.redirect(url);
   } catch (err) {
     next(err);

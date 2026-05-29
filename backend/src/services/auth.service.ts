@@ -7,7 +7,7 @@ import { HttpError } from '../middlewares/error';
 import type { AuthPayload } from '../middlewares/auth';
 import type { LoginInput, RegisterInput } from '../schemas/auth.schema';
 
-const BCRYPT_ROUNDS = 12;
+const BCRYPT_ROUNDS = 10;
 
 const signToken = (user: { id: string; role: 'USER' | 'ADMIN' }, twoFactorVerified = false) => {
   const payload: AuthPayload = {

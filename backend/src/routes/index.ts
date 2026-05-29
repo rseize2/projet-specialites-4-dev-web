@@ -6,7 +6,7 @@ import documentRoutes from './documents.routes';
 
 const router = Router();
 
-router.get('/health', (_req, res) => res.json({ data: { status: 'ok' } }));
+router.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);

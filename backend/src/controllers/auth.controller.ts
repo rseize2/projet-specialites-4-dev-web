@@ -22,8 +22,6 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 };
 
 export const logout = (_req: AuthRequest, res: Response) => {
-  // JWT stateless : le client doit supprimer son token.
-  // Endpoint exposé pour permettre de logger l'événement / blacklister plus tard.
   res.json({ data: { success: true } });
 };
 

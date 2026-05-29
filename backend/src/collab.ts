@@ -5,7 +5,6 @@ import { prisma } from './lib/prisma';
 import { env } from './config/env';
 import type { AuthPayload } from './middlewares/auth';
 
-// deuxième serveur de l'application — port 4000 dédié à la collaboration temps réel
 export const collabServer = new Server({
   port: 4000,
 
@@ -32,7 +31,6 @@ export const collabServer = new Server({
       throw new Error('Accès refusé');
     }
 
-    // restaure le dernier état Yjs persisté
     if (doc.yjsState) {
       Y.applyUpdate(data.document, doc.yjsState);
     }

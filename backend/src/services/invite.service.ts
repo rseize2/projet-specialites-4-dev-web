@@ -14,7 +14,6 @@ export const invite = async (ownerId: string, documentId: string, email: string)
     throw new HttpError(400, 'CANNOT_INVITE_SELF', 'Vous êtes déjà propriétaire de ce document');
   }
 
-  // si l'utilisateur est déjà invité on retourne silencieusement l'invite existante
   const existing = await prisma.documentInvite.findUnique({
     where: { documentId_userId: { documentId, userId: target.id } },
   });

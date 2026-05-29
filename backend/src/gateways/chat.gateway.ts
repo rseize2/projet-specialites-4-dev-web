@@ -13,7 +13,7 @@ interface SendPayload {
 export function registerChatGateway(io: Server) {
   io.on('connection', (socket: Socket) => {
     const user = getSocketUser(socket);
-    if (!user) return; // auth socket middleware doit avoir attaché user
+    if (!user) return; 
 
     socket.on(
       'chat:send',
@@ -29,7 +29,6 @@ export function registerChatGateway(io: Server) {
             payload.documentId,
             parsed.data,
           );
-          // diffuse à toute la room (y compris l'émetteur - meilleure UX)
           io.to(roomId(payload.documentId)).emit('chat:message', message);
           ack?.({ ok: true });
         } catch (err: unknown) {

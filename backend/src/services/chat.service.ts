@@ -10,10 +10,7 @@ const messageSelect = {
   user: { select: { id: true, firstName: true, lastName: true } },
 } as const;
 
-/**
- * Vérifie que l'utilisateur a accès au document (owner ou invité).
- * Throw 403 sinon, 404 si le doc n'existe pas.
- */
+
 export const assertDocumentAccess = async (userId: string, documentId: string) => {
   const doc = await prisma.document.findUnique({
     where: { id: documentId },
@@ -46,7 +43,6 @@ export const listMessages = async (
     take: limit,
   });
 
-  // renvoyer dans l'ordre chronologique (plus ancien en haut)
   return messages.reverse();
 };
 

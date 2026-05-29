@@ -6,7 +6,6 @@ import type {
   UpdateDocumentInput,
 } from '../schemas/documents.schema';
 
-// champs renvoyés au client - on n'expose pas le contenu dans la liste
 const documentListSelect = {
   id: true,
   title: true,
@@ -42,7 +41,6 @@ export const create = async (userId: string, input: CreateDocumentInput) => {
   });
 };
 
-// vérifie que l'utilisateur est owner ou invité
 const checkAccess = async (userId: string, documentId: string) => {
   const doc = await prisma.document.findUnique({
     where: { id: documentId },

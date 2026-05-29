@@ -40,7 +40,7 @@ model Document {
   updatedBy String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  yjsState  Bytes?   // état binaire Yjs persisté par Hocuspocus
+  yjsState  Bytes?   
 
   owner         User             @relation("DocumentOwner", fields: [ownerId], references: [id])
   updatedByUser User?            @relation("DocumentUpdatedBy", fields: [updatedBy], references: [id])
@@ -55,7 +55,7 @@ model DocumentFile {
   filename   String
   mimeType   String
   size       Int
-  storageKey String   // chemin dans le bucket MinIO
+  storageKey String   
   uploadedBy String
   createdAt  DateTime @default(now())
 

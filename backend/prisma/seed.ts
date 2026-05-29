@@ -23,8 +23,6 @@ async function main() {
       role: 'ADMIN',
     },
   });
-  console.log(`Admin créé : ${ADMIN_EMAIL} / ${ADMIN_PASSWORD}`);
-  console.log('⚠️  Change ce mot de passe immédiatement en prod !');
 }
 
 main()

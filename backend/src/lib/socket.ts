@@ -16,7 +16,6 @@ export function initSocket(server: HttpServer) {
     },
   });
 
-  // Auth JWT obligatoire pour toutes les connexions Socket.io
   io.use(authSocket);
 
   registerDocumentGateway(io);

@@ -3,15 +3,14 @@ import { env } from '../config/env';
 
 export const s3 = new S3Client({
   endpoint: `http${env.MINIO_USE_SSL ? 's' : ''}://${env.MINIO_ENDPOINT}:${env.MINIO_PORT}`,
-  region: 'us-east-1', // MinIO ignore la région mais le SDK l'exige
+  region: 'us-east-1', 
   credentials: {
     accessKeyId: env.MINIO_ACCESS_KEY,
     secretAccessKey: env.MINIO_SECRET_KEY,
   },
-  forcePathStyle: true, // obligatoire avec MinIO
+  forcePathStyle: true, 
 });
 
-// s'assure que le bucket existe au démarrage de l'app
 export async function ensureBucket() {
   try {
     await s3.send(new HeadBucketCommand({ Bucket: env.MINIO_BUCKET }));

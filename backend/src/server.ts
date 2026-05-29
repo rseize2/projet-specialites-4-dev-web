@@ -14,7 +14,7 @@ const server = http.createServer(app);
 app.set('trust proxy', 1);
 
 initSocket(server);
-ensureBucket().catch(err => console.error('MinIO bucket init failed:', err));
+ensureBucket().catch((err) => console.error('MinIO bucket init failed:', err));
 collabServer.listen();
 
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
@@ -24,5 +24,5 @@ app.use('/api', routes);
 app.use(errorHandler);
 
 server.listen(env.PORT, () => {
-  console.log(`🚀 API ready on http://localhost:${env.PORT}/api`);
+  console.log(`API ready on http://localhost:${env.PORT}/api`);
 });

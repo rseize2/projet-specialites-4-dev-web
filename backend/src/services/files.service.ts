@@ -6,7 +6,6 @@ import { prisma } from '../lib/prisma';
 import { env } from '../config/env';
 import { HttpError } from '../middlewares/error';
 
-// vérifie que l'utilisateur a accès au document (owner ou invité)
 async function checkAccess(userId: string, documentId: string) {
   const doc = await prisma.document.findUnique({
     where: { id: documentId },
@@ -26,7 +25,6 @@ export const upload = async (
 ) => {
   await checkAccess(userId, documentId);
 
-  // clé unique dans le bucket : documentId/uuid-filename
   const storageKey = `${documentId}/${randomUUID()}-${file.originalname}`;
 
   await s3.send(new PutObjectCommand({
@@ -64,7 +62,6 @@ export const getDownloadUrl = async (userId: string, documentId: string, fileId:
     throw new HttpError(404, 'FILE_NOT_FOUND', 'Fichier introuvable');
   }
 
-  // presigned URL valable 15 minutes
   const url = await getSignedUrl(
     s3,
     new GetObjectCommand({ Bucket: env.MINIO_BUCKET, Key: file.storageKey }),

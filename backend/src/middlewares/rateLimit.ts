@@ -4,10 +4,6 @@ const rateLimitMessage = (code: string, message: string) => ({
   error: { code, message },
 });
 
-/**
- * Limite générique des endpoints sensibles d'authentification.
- * 5 tentatives par IP toutes les 5 minutes.
- */
 export const authLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
   limit: 5,
@@ -19,10 +15,6 @@ export const authLimiter = rateLimit({
   ),
 });
 
-/**
- * Limite spécifique pour la vérification 2FA (un peu plus stricte).
- * 10 tentatives par IP toutes les 5 minutes.
- */
 export const twoFactorLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
   limit: 10,

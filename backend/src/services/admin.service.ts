@@ -3,7 +3,7 @@ import { prisma } from '../lib/prisma';
 import { HttpError } from '../middlewares/error';
 import type { CreateUserInput, ListUsersQuery } from '../schemas/admin.schema';
 
-const BCRYPT_ROUNDS = 12;
+const BCRYPT_ROUNDS = 10;
 
 const publicFields = {
   id: true,
