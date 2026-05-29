@@ -44,6 +44,7 @@ model Document {
   updatedByUser User?            @relation("DocumentUpdatedBy", fields: [updatedBy], references: [id])
   invites       DocumentInvite[]
   files         DocumentFile[]
+  yjsState      Bytes?           // état binaire Yjs persisté par Hocuspocus
 }
 
 model DocumentFile {

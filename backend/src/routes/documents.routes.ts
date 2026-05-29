@@ -3,9 +3,11 @@ import multer from 'multer';
 import { requireAuth } from '../middlewares/auth';
 import { validate } from '../middlewares/validate';
 import { createDocumentSchema, updateDocumentSchema } from '../schemas/documents.schema';
+import { inviteSchema } from '../schemas/invite.schema';
 import * as documentsController from '../controllers/documents.controller';
 import * as filesController from '../controllers/files.controller';
 import * as exportController from '../controllers/export.controller';
+import * as inviteController from '../controllers/invite.controller';
 
 const router = Router();
 
@@ -33,6 +35,10 @@ router.post('/:id/files', upload.single('file'), filesController.uploadFile);
 router.get('/:id/files', filesController.listFiles);
 router.get('/:id/files/:fileId', filesController.downloadFile);
 router.delete('/:id/files/:fileId', filesController.deleteFile);
+
+// invitations collaborateurs
+router.post('/:id/invite', validate(inviteSchema), inviteController.inviteCollaborator);
+router.delete('/:id/invite/:userId', inviteController.removeCollaborator);
 
 // export PDF du contenu textuel
 router.get('/:id/export', exportController.exportDocument);
