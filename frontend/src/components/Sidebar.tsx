@@ -22,14 +22,13 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ onNavigate }: SidebarProps) {
-    const { user, logout } = useAuth()
-    const navigate = useNavigate()
+    const { user, logout }    = useAuth()
+    const navigate            = useNavigate()
 
     async function handleLogout() {
         try {
             await logoutApi()
         } catch {
-            // silent — logout client-side even if backend fails
         }
         logout()
         toast.success('Déconnecté')
@@ -58,8 +57,8 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
 
                 {user?.role === 'ADMIN' && (
                     <>
-                        <Separator className="my-2" />
-                        <p className="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        <Separator className    = "my-2" />
+                        <p className            = "px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                             Administration
                         </p>
                         <NavLink to="/admin/users" className={navLinkClass} onClick={onNavigate}>
@@ -77,16 +76,16 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
                             <AvatarFallback>{initials(user)}</AvatarFallback>
                         </Avatar>
                         <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm font-medium text-foreground">{fullName(user)}</p>
-                            <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+                            <p className    = "truncate text-sm font-medium text-foreground">{fullName(user)}</p>
+                            <p className    = "truncate text-xs text-muted-foreground">{user.email}</p>
                         </div>
                     </div>
                 )}
                 <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full justify-start text-muted-foreground hover:text-destructive"
-                    onClick={handleLogout}
+                    variant      = "ghost"
+                    size         = "sm"
+                    className    = "w-full justify-start text-muted-foreground hover:text-destructive"
+                    onClick      = {handleLogout}
                 >
                     <LogOut className="mr-2 h-4 w-4" />
                     Se déconnecter

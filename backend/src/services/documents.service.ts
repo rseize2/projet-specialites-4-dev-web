@@ -1,8 +1,12 @@
 import { prisma } from '../lib/prisma';
 import { HttpError } from '../middlewares/error';
-import type { CreateDocumentInput, UpdateDocumentInput } from '../schemas/documents.schema';
+import type {
+  CreateDocumentInput,
+  InviteInput,
+  UpdateDocumentInput,
+} from '../schemas/documents.schema';
 
-// champs renvoyés au client — on n'expose pas le contenu dans la liste
+// champs renvoyés au client - on n'expose pas le contenu dans la liste
 const documentListSelect = {
   id: true,
   title: true,
@@ -66,6 +70,37 @@ export const update = async (userId: string, documentId: string, input: UpdateDo
       updatedBy: userId,
     },
   });
+};
+
+export const invite = async (userId: string, documentId: string, input: InviteInput) => {
+  const doc = await prisma.document.findUnique({ where: { id: documentId } });
+  if (!doc) throw new HttpError(404, 'DOCUMENT_NOT_FOUND', 'Document introuvable');
+  if (doc.ownerId !== userId) {
+    throw new HttpError(403, 'FORBIDDEN', 'Seul le propriétaire peut inviter des collaborateurs');
+  }
+
+  const invitee = await prisma.user.findUnique({ where: { email: input.email } });
+  if (!invitee) {
+    throw new HttpError(404, 'USER_NOT_FOUND', "Aucun utilisateur n'a cette adresse e-mail");
+  }
+  if (invitee.id === userId) {
+    throw new HttpError(400, 'CANNOT_INVITE_SELF', 'Vous ne pouvez pas vous inviter vous-même');
+  }
+
+  await prisma.documentInvite.upsert({
+    where: { documentId_userId: { documentId, userId: invitee.id } },
+    update: {},
+    create: { documentId, userId: invitee.id },
+  });
+
+  return {
+    user: {
+      id: invitee.id,
+      email: invitee.email,
+      firstName: invitee.firstName,
+      lastName: invitee.lastName,
+    },
+  };
 };
 
 export const remove = async (userId: string, documentId: string) => {

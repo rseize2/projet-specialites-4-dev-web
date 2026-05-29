@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import Sidebar from './Sidebar'
 import { Button } from './ui/button'
+import GlobalCallNotifications from './GlobalCallNotifications'
 
 export default function Layout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -11,8 +12,8 @@ export default function Layout() {
         <div className="flex h-screen overflow-hidden bg-background">
             {sidebarOpen && (
                 <div
-                    className="fixed inset-0 z-30 bg-black/50 lg:hidden"
-                    onClick={() => setSidebarOpen(false)}
+                    className    = "fixed inset-0 z-30 bg-black/50 lg:hidden"
+                    onClick      = {() => setSidebarOpen(false)}
                 />
             )}
 
@@ -37,6 +38,8 @@ export default function Layout() {
                     </div>
                 </main>
             </div>
+
+            <GlobalCallNotifications />
         </div>
     )
 }

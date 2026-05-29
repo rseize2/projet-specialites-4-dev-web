@@ -1,4 +1,4 @@
-# Backend — Projet Spé 4
+# Backend - Projet Spé 4
 
 API REST + WebSocket pour l'application collaborative d'édition de documents.
 
@@ -9,9 +9,9 @@ Auth, gestion utilisateurs, admin, infra. Les routes `documents` et le temps ré
 ## Stack
 
 - **Node.js 20+** / **TypeScript**
-- **Express 4** — framework HTTP
-- **Prisma** — ORM + migrations PostgreSQL
-- **Zod** — validation des entrées
+- **Express 4** - framework HTTP
+- **Prisma** - ORM + migrations PostgreSQL
+- **Zod** - validation des entrées
 - **JWT** + **bcrypt** + **otplib** (2FA TOTP)
 
 ## Démarrage
