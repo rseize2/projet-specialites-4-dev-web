@@ -4,7 +4,7 @@ let socket: Socket | null = null
 
 /**
  * Connexion Socket.io partagée, authentifiée via le JWT du localStorage.
- * Singleton — toutes les pages partagent la même socket.
+ * Singleton - toutes les pages partagent la même socket.
  */
 export function getSocket(): Socket {
     if (socket && socket.connected) return socket

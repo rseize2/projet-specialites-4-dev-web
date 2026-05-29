@@ -15,7 +15,7 @@ async function http(path: string, init: RequestInit = {}) {
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const ok = (label: string, cond: boolean, extra?: unknown) => {
-  console.log(`${cond ? '✅' : '❌'}  ${label}${extra !== undefined ? ' — ' + JSON.stringify(extra).slice(0, 200) : ''}`);
+  console.log(`${cond ? '✅' : '❌'}  ${label}${extra !== undefined ? ' - ' + JSON.stringify(extra).slice(0, 200) : ''}`);
 };
 
 async function login(email: string, password: string) {

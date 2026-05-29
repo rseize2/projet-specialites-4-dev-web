@@ -34,6 +34,8 @@ services:
       MINIO_SECRET_KEY: minioadmin
       MINIO_BUCKET: documents
       MINIO_USE_SSL: "false"
+    ports:
+      - "3000:3000"
     depends_on:
       postgres:
         condition: service_healthy

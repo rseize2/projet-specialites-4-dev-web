@@ -15,8 +15,8 @@ export default function App() {
         <AuthProvider>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path    = "/login" element={<LoginPage />} />
+                    <Route path    = "/register" element={<RegisterPage />} />
 
                     <Route
                         element={
@@ -25,9 +25,9 @@ export default function App() {
                             </ProtectedRoute>
                         }
                     >
-                        <Route path="/dashboard" element={<DashboardPage />} />
-                        <Route path="/documents/:id" element={<DocumentPage />} />
-                        <Route path="/profile" element={<ProfilePage />} />
+                        <Route path    = "/dashboard" element={<DashboardPage />} />
+                        <Route path    = "/documents/:id" element={<DocumentPage />} />
+                        <Route path    = "/profile" element={<ProfilePage />} />
                         <Route
                             path="/admin/users"
                             element={
@@ -38,8 +38,8 @@ export default function App() {
                         />
                     </Route>
 
-                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                    <Route path    = "/" element={<Navigate to="/dashboard" replace />} />
+                    <Route path    = "*" element={<Navigate to="/dashboard" replace />} />
                 </Routes>
 
                 <Toaster position="bottom-right" richColors closeButton />

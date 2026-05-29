@@ -227,7 +227,7 @@ export function useCall(documentId: string | undefined): UseCallReturn {
 
         const onJoined = (p: CallParticipant) => {
             setParticipants((prev) => [...prev, p])
-            // On NE prend PAS l'initiative — on attend leur offer
+            // On NE prend PAS l'initiative - on attend leur offer
         }
 
         const onLeft = ({ socketId }: { socketId: string }) => {

@@ -12,8 +12,8 @@ export default function Layout() {
         <div className="flex h-screen overflow-hidden bg-background">
             {sidebarOpen && (
                 <div
-                    className="fixed inset-0 z-30 bg-black/50 lg:hidden"
-                    onClick={() => setSidebarOpen(false)}
+                    className    = "fixed inset-0 z-30 bg-black/50 lg:hidden"
+                    onClick      = {() => setSidebarOpen(false)}
                 />
             )}
 

@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button'
 interface Props {
     open: boolean
     documentTitle?: string
-    onAccept: () => void
-    onDismiss: () => void
+    onAccept: ()     => void
+    onDismiss: ()    => void
 }
 
 export default function IncomingCallToast({

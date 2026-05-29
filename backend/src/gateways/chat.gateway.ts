@@ -29,7 +29,7 @@ export function registerChatGateway(io: Server) {
             payload.documentId,
             parsed.data,
           );
-          // diffuse à toute la room (y compris l'émetteur — meilleure UX)
+          // diffuse à toute la room (y compris l'émetteur - meilleure UX)
           io.to(roomId(payload.documentId)).emit('chat:message', message);
           ack?.({ ok: true });
         } catch (err: unknown) {

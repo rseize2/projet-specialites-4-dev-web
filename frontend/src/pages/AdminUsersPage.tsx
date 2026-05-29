@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { UserPlus, Lock, Unlock, Loader2, Search, Shield } from 'lucide-react'
+import { UserPlus, Lock, Unlock, Loader2, Search, Shield, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { getUsers, createUser, blockUser, unblockUser } from '@/api/users'
+import { getUsers, createUser, blockUser, unblockUser, deleteUser } from '@/api/users'
 import type { User } from '@/types'
 import { fullName, initials } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -20,6 +20,10 @@ export default function AdminUsersPage() {
     const [isLoading, setIsLoading]    = useState(true)
     const [search, setSearch]          = useState('')
     const [loadingId, setLoadingId]    = useState<string | null>(null)
+
+    const [showDelete, setShowDelete]            = useState(false)
+    const [userToDelete, setUserToDelete]        = useState<User | null>(null)
+    const [isDeleting, setIsDeleting]            = useState(false)
 
     const [showCreate, setShowCreate]        = useState(false)
     const [newFirstName, setNewFirstName]    = useState('')
@@ -60,6 +64,22 @@ export default function AdminUsersPage() {
             toast.error(err instanceof Error ? err.message : 'Erreur lors de la modification')
         } finally {
             setLoadingId(null)
+        }
+    }
+
+    async function handleDelete() {
+        if (!userToDelete) return
+        setIsDeleting(true)
+        try {
+            await deleteUser(userToDelete.id)
+            setUsers(prev => prev.filter(u => u.id !== userToDelete.id))
+            setShowDelete(false)
+            setUserToDelete(null)
+            toast.success('Compte supprimé')
+        } catch (err) {
+            toast.error(err instanceof Error ? err.message : 'Erreur lors de la suppression')
+        } finally {
+            setIsDeleting(false)
         }
     }
 
@@ -149,24 +169,35 @@ export default function AdminUsersPage() {
                                             </Badge>
                                         </td>
                                         <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">
-                                            {user.createdAt ? formatDate(user.createdAt) : '—'}
+                                            {user.createdAt ? formatDate(user.createdAt) : '-'}
                                         </td>
                                         <td className="px-4 py-3 text-right">
-                                            <Button
-                                                variant      = "outline"
-                                                size         = "sm"
-                                                onClick      = {() => handleBlock(user)}
-                                                disabled     = {loadingId === user.id}
-                                                className    = {user.blocked ? 'text-green-600 hover:text-green-700' : 'text-destructive hover:text-destructive'}
-                                            >
-                                                {loadingId === user.id ? (
-                                                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                                ) : user.blocked ? (
-                                                    <><Unlock className="mr-1.5 h-3.5 w-3.5" />Débloquer</>
-                                                ) : (
-                                                    <><Lock className="mr-1.5 h-3.5 w-3.5" />Bloquer</>
-                                                )}
-                                            </Button>
+                                            <div className="flex items-center justify-end gap-2">
+                                                <Button
+                                                    variant      = "outline"
+                                                    size         = "sm"
+                                                    onClick      = {() => handleBlock(user)}
+                                                    disabled     = {loadingId === user.id}
+                                                    className    = {user.blocked ? 'text-green-600 hover:text-green-700' : 'text-destructive hover:text-destructive'}
+                                                >
+                                                    {loadingId === user.id ? (
+                                                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                                    ) : user.blocked ? (
+                                                        <><Unlock className="mr-1.5 h-3.5 w-3.5" />Débloquer</>
+                                                    ) : (
+                                                        <><Lock className="mr-1.5 h-3.5 w-3.5" />Bloquer</>
+                                                    )}
+                                                </Button>
+                                                <Button
+                                                    variant      = "ghost"
+                                                    size         = "icon"
+                                                    className    = "h-8 w-8 text-destructive hover:text-destructive"
+                                                    title        = "Supprimer"
+                                                    onClick      = {() => { setUserToDelete(user); setShowDelete(true) }}
+                                                >
+                                                    <Trash2 className="h-3.5 w-3.5" />
+                                                </Button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -182,6 +213,27 @@ export default function AdminUsersPage() {
                     </div>
                 </div>
             )}
+
+            <Dialog open={showDelete} onOpenChange={(o) => { if (!o) { setShowDelete(false); setUserToDelete(null) } }}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Supprimer le compte</DialogTitle>
+                        <DialogDescription>
+                            Cette action est irréversible. Le compte de{' '}
+                            <strong>{userToDelete ? fullName(userToDelete) : ''}</strong> sera définitivement supprimé.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => { setShowDelete(false); setUserToDelete(null) }}>
+                            Annuler
+                        </Button>
+                        <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+                            {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Supprimer
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
             <Dialog open={showCreate} onOpenChange={setShowCreate}>
                 <DialogContent>

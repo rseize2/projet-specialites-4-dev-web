@@ -15,7 +15,7 @@ import { listMessagesQuerySchema } from '../schemas/chat.schema';
 
 const router = Router();
 
-// multer en mémoire — le buffer est passé directement à MinIO
+// multer en mémoire - le buffer est passé directement à MinIO
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 20 * 1024 * 1024 }, // 20 Mo max

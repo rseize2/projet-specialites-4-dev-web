@@ -5,15 +5,15 @@ import IncomingCallToast from './IncomingCallToast'
 
 /**
  * Affiche le toast d'appel entrant pour le premier appel actif.
- * (Cas multi-appels simultanés rare en pratique — KISS.)
+ * (Cas multi-appels simultanés rare en pratique - KISS.)
  */
 export default function GlobalCallNotifications() {
-    const { incomingCalls, dismiss } = useIncomingCalls()
-    const navigate = useNavigate()
-    const location = useLocation()
+    const { incomingCalls, dismiss }    = useIncomingCalls()
+    const navigate                      = useNavigate()
+    const location                      = useLocation()
 
-    const calls = Array.from(incomingCalls.values())
-    const current = calls[0]
+    const calls      = Array.from(incomingCalls.values())
+    const current    = calls[0]
 
     // Sonnerie tant qu'un appel entrant est affiché
     useRingtone(!!current)
@@ -35,9 +35,9 @@ export default function GlobalCallNotifications() {
     return (
         <IncomingCallToast
             open
-            documentTitle={current.documentTitle}
-            onAccept={handleAccept}
-            onDismiss={() => dismiss(current.documentId)}
+            documentTitle    = {current.documentTitle}
+            onAccept         = {handleAccept}
+            onDismiss        = {() => dismiss(current.documentId)}
         />
     )
 }

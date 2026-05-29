@@ -15,23 +15,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 export default function ProfilePage() {
     const { user, updateUser } = useAuth()
 
-    const [firstName, setFirstName] = useState(user?.firstName ?? '')
-    const [lastName, setLastName] = useState(user?.lastName ?? '')
-    const [isSaving, setIsSaving] = useState(false)
+    const [firstName, setFirstName]    = useState(user?.firstName ?? '')
+    const [lastName, setLastName]      = useState(user?.lastName ?? '')
+    const [isSaving, setIsSaving]      = useState(false)
 
-    const [currentPassword, setCurrentPassword] = useState('')
-    const [newPassword, setNewPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [isChangingPassword, setIsChangingPassword] = useState(false)
+    const [currentPassword, setCurrentPassword]          = useState('')
+    const [newPassword, setNewPassword]                  = useState('')
+    const [confirmPassword, setConfirmPassword]          = useState('')
+    const [isChangingPassword, setIsChangingPassword]    = useState(false)
 
-    const [qrCode, setQrCode] = useState('')
-    const [secret, setSecret] = useState('')
-    const [totpInput, setTotpInput] = useState('')
-    const [disableInput, setDisableInput] = useState('')
-    const [isEnabling, setIsEnabling] = useState(false)
-    const [isVerifying, setIsVerifying] = useState(false)
-    const [isDisabling, setIsDisabling] = useState(false)
-    const [twoFASuccess, setTwoFASuccess] = useState(false)
+    const [qrCode, setQrCode]                = useState('')
+    const [secret, setSecret]                = useState('')
+    const [totpInput, setTotpInput]          = useState('')
+    const [disableInput, setDisableInput]    = useState('')
+    const [isEnabling, setIsEnabling]        = useState(false)
+    const [isVerifying, setIsVerifying]      = useState(false)
+    const [isDisabling, setIsDisabling]      = useState(false)
+    const [twoFASuccess, setTwoFASuccess]    = useState(false)
 
     async function handleSaveProfile(e: React.FormEvent) {
         e.preventDefault()
@@ -124,8 +124,8 @@ export default function ProfilePage() {
 
             <Tabs defaultValue="info">
                 <TabsList className="mb-6">
-                    <TabsTrigger value="info">Informations</TabsTrigger>
-                    <TabsTrigger value="security">Sécurité & 2FA</TabsTrigger>
+                    <TabsTrigger value    = "info">Informations</TabsTrigger>
+                    <TabsTrigger value    = "security">Sécurité & 2FA</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="info">
@@ -159,12 +159,12 @@ export default function ProfilePage() {
                             <CardContent className="space-y-4 pt-6">
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="space-y-2">
-                                        <Label htmlFor="firstName">Prénom</Label>
-                                        <Input id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+                                        <Label htmlFor    = "firstName">Prénom</Label>
+                                        <Input id         = "firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="lastName">Nom</Label>
-                                        <Input id="lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+                                        <Label htmlFor    = "lastName">Nom</Label>
+                                        <Input id         = "lastName" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
                                     </div>
                                 </div>
 
@@ -184,18 +184,18 @@ export default function ProfilePage() {
 
                         <form onSubmit={handleChangePassword}>
                             <CardContent className="space-y-4 pt-6">
-                                <p className="text-sm font-medium text-foreground">Changer de mot de passe</p>
-                                <div className="space-y-2">
-                                    <Label htmlFor="currentPassword">Mot de passe actuel</Label>
-                                    <Input id="currentPassword" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
+                                <p className      = "text-sm font-medium text-foreground">Changer de mot de passe</p>
+                                <div className    = "space-y-2">
+                                    <Label htmlFor    = "currentPassword">Mot de passe actuel</Label>
+                                    <Input id         = "currentPassword" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="newPassword">Nouveau mot de passe</Label>
-                                    <Input id="newPassword" type="password" placeholder="8 caractères minimum" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
+                                    <Label htmlFor    = "newPassword">Nouveau mot de passe</Label>
+                                    <Input id         = "newPassword" type="password" placeholder="8 caractères minimum" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="confirmPassword">Confirmer</Label>
-                                    <Input id="confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+                                    <Label htmlFor    = "confirmPassword">Confirmer</Label>
+                                    <Input id         = "confirmPassword" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
                                 </div>
                                 <Button type="submit" variant="outline" disabled={isChangingPassword}>
                                     {isChangingPassword && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -224,26 +224,26 @@ export default function ProfilePage() {
                                     <div className="flex items-center gap-3 rounded-lg bg-green-50 p-4 text-green-800">
                                         <ShieldCheck className="h-5 w-5 flex-shrink-0" />
                                         <div>
-                                            <p className="font-medium">2FA activé</p>
-                                            <p className="text-sm opacity-80">Votre compte est protégé par une authentification à deux facteurs.</p>
+                                            <p className    = "font-medium">2FA activé</p>
+                                            <p className    = "text-sm opacity-80">Votre compte est protégé par une authentification à deux facteurs.</p>
                                         </div>
                                     </div>
 
                                     <Separator />
 
                                     <form onSubmit={handleDisable2FA} className="space-y-3">
-                                        <p className="text-sm font-medium text-foreground">Désactiver la 2FA</p>
-                                        <div className="space-y-2">
+                                        <p className      = "text-sm font-medium text-foreground">Désactiver la 2FA</p>
+                                        <div className    = "space-y-2">
                                             <Label htmlFor="disable-totp">Code de confirmation</Label>
                                             <Input
-                                                id="disable-totp"
-                                                type="text"
-                                                placeholder="000000"
-                                                maxLength={6}
-                                                inputMode="numeric"
-                                                value={disableInput}
-                                                onChange={(e) => setDisableInput(e.target.value)}
-                                                className="w-40"
+                                                id             = "disable-totp"
+                                                type           = "text"
+                                                placeholder    = "000000"
+                                                maxLength      = {6}
+                                                inputMode      = "numeric"
+                                                value          = {disableInput}
+                                                onChange       = {(e) => setDisableInput(e.target.value)}
+                                                className      = "w-40"
                                             />
                                         </div>
                                         <Button type="submit" variant="destructive" size="sm" disabled={disableInput.length !== 6 || isDisabling}>
@@ -256,8 +256,8 @@ export default function ProfilePage() {
                                 <div className="flex items-center gap-3 rounded-lg bg-muted p-4 text-muted-foreground">
                                     <Shield className="h-5 w-5 flex-shrink-0" />
                                     <div>
-                                        <p className="font-medium text-foreground">2FA non activé</p>
-                                        <p className="text-sm">Activez le 2FA pour sécuriser davantage votre compte.</p>
+                                        <p className    = "font-medium text-foreground">2FA non activé</p>
+                                        <p className    = "text-sm">Activez le 2FA pour sécuriser davantage votre compte.</p>
                                     </div>
                                 </div>
                             )}
@@ -273,9 +273,9 @@ export default function ProfilePage() {
                                 <div className="space-y-4">
                                     <Separator />
                                     <div>
-                                        <p className="mb-3 text-sm font-medium">1. Scannez ce QR code avec votre application</p>
-                                        <img src={qrCode} alt="QR Code 2FA" className="rounded-lg border border-border" width={200} height={200} />
-                                        <p className="mt-2 text-xs text-muted-foreground">
+                                        <p className    = "mb-3 text-sm font-medium">1. Scannez ce QR code avec votre application</p>
+                                        <img src        = {qrCode} alt="QR Code 2FA" className="rounded-lg border border-border" width={200} height={200} />
+                                        <p className    = "mt-2 text-xs text-muted-foreground">
                                             Clé manuelle : <code className="rounded bg-muted px-1 py-0.5 font-mono">{secret}</code>
                                         </p>
                                     </div>
@@ -284,14 +284,14 @@ export default function ProfilePage() {
                                         <div className="space-y-2">
                                             <Label htmlFor="totp-verify">2. Entrez le code à 6 chiffres pour confirmer</Label>
                                             <Input
-                                                id="totp-verify"
-                                                type="text"
-                                                placeholder="000000"
-                                                maxLength={6}
-                                                inputMode="numeric"
-                                                value={totpInput}
-                                                onChange={(e) => setTotpInput(e.target.value)}
-                                                className="w-40"
+                                                id             = "totp-verify"
+                                                type           = "text"
+                                                placeholder    = "000000"
+                                                maxLength      = {6}
+                                                inputMode      = "numeric"
+                                                value          = {totpInput}
+                                                onChange       = {(e) => setTotpInput(e.target.value)}
+                                                className      = "w-40"
                                             />
                                         </div>
                                         <Button type="submit" disabled={totpInput.length !== 6 || isVerifying}>

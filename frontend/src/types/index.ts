@@ -59,6 +59,25 @@ export interface RegisterDto {
     lastName: string
 }
 
+export interface ChatMessage {
+    id: string
+    documentId: string
+    content: string
+    createdAt: string
+    user: { id: string; firstName: string; lastName: string }
+}
+
+export interface DocumentFile {
+    id: string
+    documentId: string
+    filename: string
+    mimeType: string
+    size: number
+    storageKey: string
+    uploadedBy: string
+    createdAt: string
+}
+
 export function fullName(user: Pick<User, 'firstName' | 'lastName'>): string {
     return `${user.firstName} ${user.lastName}`
 }

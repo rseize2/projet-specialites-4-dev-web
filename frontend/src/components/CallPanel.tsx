@@ -10,8 +10,8 @@ interface Props {
     micEnabled: boolean
     cameraEnabled: boolean
     hasVideo: boolean
-    onToggleMic: () => void
-    onToggleCamera: () => void
+    onToggleMic: ()       => void
+    onToggleCamera: ()    => void
     selfName?: string
 }
 
@@ -103,7 +103,7 @@ export default function CallPanel({
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-sm font-medium">
                     <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                    Appel en cours — {total} participant{total > 1 ? 's' : ''}
+                    Appel en cours - {total} participant{total > 1 ? 's' : ''}
                 </div>
                 <div className="flex gap-1.5">
                     <Button

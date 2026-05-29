@@ -1,14 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import client from '@/api/client'
 import { getSocket } from '@/lib/socket'
+import type { ChatMessage } from '@/types'
 
-export interface ChatMessage {
-    id: string
-    documentId: string
-    content: string
-    createdAt: string
-    user: { id: string; firstName: string; lastName: string }
-}
+export type { ChatMessage }
 
 export function useChat(documentId: string | undefined) {
     const [messages, setMessages] = useState<ChatMessage[]>([])

@@ -19,13 +19,13 @@ interface ToolbarButtonProps {
 function ToolbarButton({ onClick, active, disabled, title, children }: ToolbarButtonProps) {
     return (
         <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className={cn('h-7 w-7', active && 'bg-accent text-accent-foreground')}
-            onClick={onClick}
-            disabled={disabled}
-            title={title}
+            type         = "button"
+            variant      = "ghost"
+            size         = "icon"
+            className    = {cn('h-7 w-7', active && 'bg-accent text-accent-foreground')}
+            onClick      = {onClick}
+            disabled     = {disabled}
+            title        = {title}
         >
             {children}
         </Button>
@@ -63,16 +63,16 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
             <Separator orientation="vertical" className="mx-1 h-5" />
 
             <ToolbarButton
-                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                active={editor.isActive('heading', { level: 1 })}
-                title="Titre 1"
+                onClick    = {() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                active     = {editor.isActive('heading', { level: 1 })}
+                title      = "Titre 1"
             >
                 <Heading1 className="h-3.5 w-3.5" />
             </ToolbarButton>
             <ToolbarButton
-                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                active={editor.isActive('heading', { level: 2 })}
-                title="Titre 2"
+                onClick    = {() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                active     = {editor.isActive('heading', { level: 2 })}
+                title      = "Titre 2"
             >
                 <Heading2 className="h-3.5 w-3.5" />
             </ToolbarButton>
@@ -80,37 +80,37 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
             <Separator orientation="vertical" className="mx-1 h-5" />
 
             <ToolbarButton
-                onClick={() => editor.chain().focus().toggleBold().run()}
-                active={editor.isActive('bold')}
-                title="Gras"
+                onClick    = {() => editor.chain().focus().toggleBold().run()}
+                active     = {editor.isActive('bold')}
+                title      = "Gras"
             >
                 <Bold className="h-3.5 w-3.5" />
             </ToolbarButton>
             <ToolbarButton
-                onClick={() => editor.chain().focus().toggleItalic().run()}
-                active={editor.isActive('italic')}
-                title="Italique"
+                onClick    = {() => editor.chain().focus().toggleItalic().run()}
+                active     = {editor.isActive('italic')}
+                title      = "Italique"
             >
                 <Italic className="h-3.5 w-3.5" />
             </ToolbarButton>
             <ToolbarButton
-                onClick={() => editor.chain().focus().toggleUnderline().run()}
-                active={editor.isActive('underline')}
-                title="Souligné"
+                onClick    = {() => editor.chain().focus().toggleUnderline().run()}
+                active     = {editor.isActive('underline')}
+                title      = "Souligné"
             >
                 <Underline className="h-3.5 w-3.5" />
             </ToolbarButton>
             <ToolbarButton
-                onClick={() => editor.chain().focus().toggleStrike().run()}
-                active={editor.isActive('strike')}
-                title="Barré"
+                onClick    = {() => editor.chain().focus().toggleStrike().run()}
+                active     = {editor.isActive('strike')}
+                title      = "Barré"
             >
                 <Strikethrough className="h-3.5 w-3.5" />
             </ToolbarButton>
             <ToolbarButton
-                onClick={() => editor.chain().focus().toggleCode().run()}
-                active={editor.isActive('code')}
-                title="Code inline"
+                onClick    = {() => editor.chain().focus().toggleCode().run()}
+                active     = {editor.isActive('code')}
+                title      = "Code inline"
             >
                 <Code className="h-3.5 w-3.5" />
             </ToolbarButton>
@@ -118,23 +118,23 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
             <Separator orientation="vertical" className="mx-1 h-5" />
 
             <ToolbarButton
-                onClick={() => editor.chain().focus().setTextAlign('left').run()}
-                active={editor.isActive({ textAlign: 'left' })}
-                title="Aligner à gauche"
+                onClick    = {() => editor.chain().focus().setTextAlign('left').run()}
+                active     = {editor.isActive({ textAlign: 'left' })}
+                title      = "Aligner à gauche"
             >
                 <AlignLeft className="h-3.5 w-3.5" />
             </ToolbarButton>
             <ToolbarButton
-                onClick={() => editor.chain().focus().setTextAlign('center').run()}
-                active={editor.isActive({ textAlign: 'center' })}
-                title="Centrer"
+                onClick    = {() => editor.chain().focus().setTextAlign('center').run()}
+                active     = {editor.isActive({ textAlign: 'center' })}
+                title      = "Centrer"
             >
                 <AlignCenter className="h-3.5 w-3.5" />
             </ToolbarButton>
             <ToolbarButton
-                onClick={() => editor.chain().focus().setTextAlign('right').run()}
-                active={editor.isActive({ textAlign: 'right' })}
-                title="Aligner à droite"
+                onClick    = {() => editor.chain().focus().setTextAlign('right').run()}
+                active     = {editor.isActive({ textAlign: 'right' })}
+                title      = "Aligner à droite"
             >
                 <AlignRight className="h-3.5 w-3.5" />
             </ToolbarButton>
@@ -142,29 +142,29 @@ export default function EditorToolbar({ editor }: EditorToolbarProps) {
             <Separator orientation="vertical" className="mx-1 h-5" />
 
             <ToolbarButton
-                onClick={() => editor.chain().focus().toggleBulletList().run()}
-                active={editor.isActive('bulletList')}
-                title="Liste à puces"
+                onClick    = {() => editor.chain().focus().toggleBulletList().run()}
+                active     = {editor.isActive('bulletList')}
+                title      = "Liste à puces"
             >
                 <List className="h-3.5 w-3.5" />
             </ToolbarButton>
             <ToolbarButton
-                onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                active={editor.isActive('orderedList')}
-                title="Liste numérotée"
+                onClick    = {() => editor.chain().focus().toggleOrderedList().run()}
+                active     = {editor.isActive('orderedList')}
+                title      = "Liste numérotée"
             >
                 <ListOrdered className="h-3.5 w-3.5" />
             </ToolbarButton>
             <ToolbarButton
-                onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                active={editor.isActive('blockquote')}
-                title="Citation"
+                onClick    = {() => editor.chain().focus().toggleBlockquote().run()}
+                active     = {editor.isActive('blockquote')}
+                title      = "Citation"
             >
                 <Quote className="h-3.5 w-3.5" />
             </ToolbarButton>
             <ToolbarButton
-                onClick={() => editor.chain().focus().setHorizontalRule().run()}
-                title="Séparateur horizontal"
+                onClick    = {() => editor.chain().focus().setHorizontalRule().run()}
+                title      = "Séparateur horizontal"
             >
                 <Minus className="h-3.5 w-3.5" />
             </ToolbarButton>

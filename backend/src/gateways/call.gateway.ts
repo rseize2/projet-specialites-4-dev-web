@@ -10,7 +10,7 @@ import { prisma } from '../lib/prisma';
  * avec chaque autre participant. Le serveur ne fait que relayer
  * les offer/answer/ice-candidate entre les clients.
  *
- * Rooms : "call:<documentId>" — séparées des rooms doc/chat.
+ * Rooms : "call:<documentId>" - séparées des rooms doc/chat.
  *
  * Events client → serveur :
  *  - call:join   { documentId }
@@ -151,7 +151,7 @@ export function registerCallGateway(io: Server) {
     });
 
     // Relais simple : on transmet le signal au destinataire ciblé.
-    // Aucune persistance — c'est éphémère.
+    // Aucune persistance - c'est éphémère.
     socket.on('call:signal', ({ to, kind, data, documentId }: SignalPayload) => {
       const room = callRoom(documentId);
       if (!socket.rooms.has(room)) return; // doit être dans la room

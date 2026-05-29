@@ -6,7 +6,7 @@ import type {
   UpdateDocumentInput,
 } from '../schemas/documents.schema';
 
-// champs renvoyés au client — on n'expose pas le contenu dans la liste
+// champs renvoyés au client - on n'expose pas le contenu dans la liste
 const documentListSelect = {
   id: true,
   title: true,
